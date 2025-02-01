@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
 
-export async function GET(request: Request, { params }: { params: { threadId: string } }) {
+export async function GET(_request: Request, { params }: { params: { threadId: string } }) {
   const thread = await prisma.thread.findUnique({
     where: { id: params.threadId },
     include: { posts: true },
