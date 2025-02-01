@@ -9,8 +9,10 @@ export type Thread = {
 
 export type Post = {
   id: string;
+  author: string;
   content: string;
   createdAt: Date;
+  updatedAt: Date;
 };
 
 export type Pagination = {
