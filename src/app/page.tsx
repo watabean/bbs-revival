@@ -4,8 +4,8 @@ import { ThreadListResponse } from '@/types/api';
 
 export default async function Home() {
   // APIからスレッドデータを取得
-  const res = await fetch('http://localhost:3000/api/threads', {
-    next: { revalidate: 60 } // ISRで60秒キャッシュ
+  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/threads`, {
+    next: { revalidate: 60 }, // ISRで60秒キャッシュ
   });
   const { threads }: ThreadListResponse = await res.json();
 
@@ -13,23 +13,15 @@ export default async function Home() {
     <div className={styles.page}>
       <main className={styles.main}>
         <h1 className={styles.title}>スレッド一覧</h1>
-        
+
         <div className={styles.threadList}>
           {threads.map((thread) => (
-            <Link 
-              key={thread.id}
-              href={`/thread/${thread.id}`}
-              className={styles.threadItem}
-            >
+            <Link key={thread.id} href={thread.id} className={styles.threadItem}>
               <h2>{thread.title}</h2>
               {thread.posts[0] && (
-                <p className={styles.lastPost}>
-                  最新投稿: {thread.posts[0].content}
-                </p>
+                <p className={styles.lastPost}>最新投稿: {thread.posts[0].content}</p>
               )}
-              <span className={styles.postCount}>
-                投稿数: {thread.posts.length}
-              </span>
+              <span className={styles.postCount}>投稿数: {thread.posts.length}</span>
             </Link>
           ))}
         </div>
