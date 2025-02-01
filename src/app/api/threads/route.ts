@@ -56,17 +56,39 @@ export async function GET(request: Request) {
 }
 
 export async function POST(request: Request) {
-  const { title } = await request.json();
+  const { title, content, author } = await request.json();
 
   if (!title) {
     return NextResponse.json({ error: 'Title is required' }, { status: 400 });
   }
+  if (!content) {
+    return NextResponse.json({ error: 'Content is required' }, { status: 400 });
+  }
 
-  const newThread = await prisma.thread.create({
-    data: {
-      title,
-    },
-  });
+  try {
+    const result = await prisma.$transaction(async (tx) => {
+      // スレッドを作成
+      const newThread = await tx.thread.create({
+        data: {
+          title,
+        },
+      });
 
-  return NextResponse.json(newThread, { status: 201 });
+      // 初回投稿を作成
+      const firstPost = await tx.post.create({
+        data: {
+          threadId: newThread.id,
+          content,
+          author,
+        },
+      });
+
+      return { newThread, firstPost };
+    });
+
+    return NextResponse.json(result.newThread, { status: 201 });
+  } catch (error) {
+    console.error(error);
+    return NextResponse.json({ error: 'Failed to create thread' }, { status: 500 });
+  }
 }
