@@ -1,6 +1,7 @@
-import prisma from '@/lib/prisma';
-import { Post, Thread } from '@prisma/client/wasm';
+import { Post } from '@prisma/client/wasm';
 import { NextResponse } from 'next/server';
+
+import prisma from '@/lib/prisma';
 
 export async function POST(request: Request, { params }: { params: { threadId: string } }) {
   const { content, author } = await request.json();
@@ -23,9 +24,8 @@ export async function POST(request: Request, { params }: { params: { threadId: s
 
   // 新しい投稿を作成
   const newPost: Post = {
-    id: Date.now().toString(),
     content,
-    author: author ?? '名無しさん',
+    author: author ?? process.env.NO_NAME,
     createdAt: new Date(),
     threadId: params.threadId,
   };

@@ -1,9 +1,12 @@
-import Link from 'next/link';
-import styles from './page.module.css';
-import { Thread, Post } from '@/types/api';
-import Pagination from '@/components/Pagination';
 import { format } from 'date-fns';
 import { ja } from 'date-fns/locale';
+import Link from 'next/link';
+
+import DeleteThreadModal from '@/components/DeleteThreadModal';
+import Pagination from '@/components/Pagination';
+import { Post } from '@/types/api';
+
+import styles from './page.module.css';
 
 type Props = {
   params: Promise<{ threadId: string }>;
@@ -69,11 +72,8 @@ export default async function ThreadDetail({ params, searchParams }: Props) {
         </button>
       </div>
 
-      <div>
-        <Link href={`/${thread.id}/delete`} className={styles.deleteLink}>
-          スレッドを削除
-        </Link>
-      </div>
+      {/* クライアントコンポーネントのモーダル */}
+      <DeleteThreadModal threadId={threadId} />
     </div>
   );
 }

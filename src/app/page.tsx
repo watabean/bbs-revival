@@ -1,9 +1,11 @@
-import Link from 'next/link';
-import styles from './page.module.css';
-import { ThreadListResponse } from '@/types/api';
-import Pagination from '@/components/Pagination';
 import { format } from 'date-fns';
 import { ja } from 'date-fns/locale';
+import Link from 'next/link';
+
+import Pagination from '@/components/Pagination';
+import { ThreadListResponse } from '@/types/api';
+
+import styles from './page.module.css';
 
 type Props = {
   searchParams: Promise<{ page: number }>;

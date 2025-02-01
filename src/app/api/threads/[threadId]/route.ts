@@ -1,4 +1,5 @@
-import { NextResponse, NextRequest } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
+
 import prisma from '@/lib/prisma';
 import { PostListResponse } from '@/types/api';
 
@@ -72,6 +73,7 @@ export async function DELETE(_request: NextRequest, { params }: Props) {
     });
     return NextResponse.json({ success: true });
   } catch (error) {
+    console.log(error);
     return NextResponse.json({ error: 'Thread not found' }, { status: 404 });
   }
 }
