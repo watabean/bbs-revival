@@ -39,3 +39,5 @@ next-env.d.ts
 
 # DB
 prisma/dev.db*
+
+指示書.md
