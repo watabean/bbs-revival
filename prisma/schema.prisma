@@ -8,18 +8,21 @@ datasource db {
 }
 
 model Thread {
-  id        String   @id @default(cuid())
+  id        Int      @id @default(autoincrement())
   title     String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  deletedAt DateTime?
   posts     Post[]
 }
 
 model Post {
-  id        String   @id @default(cuid())
+  id        Int      @id @default(autoincrement())
   content   String
   author    String
   createdAt DateTime @default(now())
-  threadId  String
+  updatedAt DateTime @updatedAt
+  deletedAt DateTime?
+  threadId  Int
   thread    Thread   @relation(fields: [threadId], references: [id])
 }
