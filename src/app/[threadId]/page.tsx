@@ -16,7 +16,7 @@ export default async function ThreadDetail({ params }: Props) {
   const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/threads/${threadId}`, {
     next: { revalidate: 60 }, // ISRで60秒キャッシュ
   });
-  const thread: Thread = await res.json();
+  const { thread, pagination } = await res.json();
 
   return (
     <div className={styles.container}>
@@ -27,7 +27,7 @@ export default async function ThreadDetail({ params }: Props) {
       </div>
       <h1 className={styles.threadTitle}>{thread.title}</h1>
 
-      {thread.posts.map((post: Post, index) => (
+      {thread.posts.map((post: Post, index: number) => (
         <div key={post.id} className={styles.post}>
           <p className={styles.postHeader}>
             <span className={styles.postNumber}>{(index + 1).toString().padStart(4, '0')}</span>{' '}
@@ -42,7 +42,11 @@ export default async function ThreadDetail({ params }: Props) {
         </div>
       ))}
 
-      <Pagination currentPage={1} totalPages={5} path={`/${threadId}`} />
+      <Pagination
+        currentPage={pagination.currentPage}
+        totalPages={pagination.totalPages}
+        path={`/${threadId}`}
+      />
 
       <div className={styles.formContainer}>
         <textarea className={styles.textarea} placeholder="新しい投稿を入力..." />

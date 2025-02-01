@@ -1,15 +1,29 @@
 import { NextResponse, NextRequest } from 'next/server';
 import prisma from '@/lib/prisma';
+import { PostListResponse } from '@/types/api';
 
 type Props = {
   params: Promise<{ threadId: string }>;
 };
 
-export async function GET(_request: NextRequest, { params }: Props) {
+export async function GET(request: NextRequest, { params }: Props) {
   const { threadId } = await params;
   if (!Number(threadId)) {
     return new Response(JSON.stringify({ error: 'Missing threadId' }), { status: 400 });
   }
+
+  // クエリパラメータ取得
+  const { searchParams } = new URL(request.url);
+  const pageParam = Number(searchParams.get('page') ?? '1');
+  const limitParam = Number(searchParams.get('limit') ?? '100');
+
+  const skip = (pageParam - 1) * limitParam;
+  const take = limitParam;
+
+  // 総投稿数（論理削除を除外）
+  const totalItems = await prisma.post.count({
+    where: { deletedAt: null, threadId: Number(threadId) },
+  });
 
   const thread = await prisma.thread.findUnique({
     where: { id: Number(threadId), deletedAt: null },
@@ -18,6 +32,8 @@ export async function GET(_request: NextRequest, { params }: Props) {
         where: {
           deletedAt: null,
         },
+        skip,
+        take,
         orderBy: {
           id: 'asc',
         },
@@ -29,7 +45,17 @@ export async function GET(_request: NextRequest, { params }: Props) {
     return NextResponse.json({ error: 'Thread not found' }, { status: 404 });
   }
 
-  return NextResponse.json(thread);
+  const response: PostListResponse = {
+    thread: thread,
+    pagination: {
+      currentPage: pageParam,
+      totalPages: Math.ceil(totalItems / limitParam),
+      totalItems,
+      itemsPerPage: limitParam,
+    },
+  };
+
+  return NextResponse.json(response);
 }
 
 export async function DELETE(_request: NextRequest, { params }: Props) {

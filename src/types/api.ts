@@ -25,3 +25,8 @@ export type ThreadListResponse = {
   threads: Thread[];
   pagination: Pagination;
 };
+
+export type PostListResponse = {
+  thread: Thread;
+  pagination: Pagination;
+};
