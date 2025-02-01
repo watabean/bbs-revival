@@ -70,27 +70,3 @@
 .newThreadButton:hover {
   background-color: #2563eb;
 }
-
-@media (prefers-color-scheme: dark) {
-  .threadItem {
-    border-color: #374151;
-    background-color: #1f2937;
-  }
-
-  .threadItem:hover {
-    background-color: #374151;
-  }
-
-  .lastPost,
-  .postCount {
-    color: #9ca3af;
-  }
-
-  .newThreadButton {
-    background-color: #1d4ed8;
-  }
-
-  .newThreadButton:hover {
-    background-color: #1e40af;
-  }
-}
