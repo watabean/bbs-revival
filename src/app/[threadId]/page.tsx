@@ -7,13 +7,20 @@ import { ja } from 'date-fns/locale';
 
 type Props = {
   params: Promise<{ threadId: string }>;
+  searchParams: Promise<{ page: number }>;
 };
 
-export default async function ThreadDetail({ params }: Props) {
+export default async function ThreadDetail({ params, searchParams }: Props) {
   const { threadId } = await params;
+  const { page } = await searchParams;
+
+  const url = new URL(`/api/threads/${threadId}`, process.env.NEXT_PUBLIC_API_URL);
+  if (page) {
+    url.searchParams.set('page', String(page));
+  }
 
   // APIからスレッドデータを取得
-  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/threads/${threadId}`, {
+  const res = await fetch(url, {
     next: { revalidate: 60 }, // ISRで60秒キャッシュ
   });
   const { thread, pagination } = await res.json();
