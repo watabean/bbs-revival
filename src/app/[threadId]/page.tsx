@@ -46,17 +46,17 @@ export default async function ThreadDetail({ params, searchParams }: Props) {
 
       {thread.posts.map((post: Post, index: number) => (
         <div key={post.id} className={styles.post}>
-          <p className={styles.postHeader}>
-            <span className={styles.postNumber}>{(index + 1).toString().padStart(4, '0')}</span>{' '}
-            {post.author ?? process.env.NO_NAME}：
-            {format(post.createdAt, 'yyyy/MM/dd(E) HH:mm:ss.SS', { locale: ja })}
-          </p>
-          <p className={styles.postContent}>{post.content}</p>
-          <div className={styles.postActions}>
-            <Link href={`/${thread.id}/posts/${post.id}/edit`} className={styles.anchor}>
-              編集
-            </Link>
+          <div className={styles.postHeader}>
+            <span className={styles.postNumber}>{(index + 1).toString().padStart(4, '0')}</span>
+            <span>{post.author ?? process.env.NO_NAME}：</span>
+            <span>{format(post.createdAt, 'yyyy/MM/dd(E) HH:mm:ss.SS', { locale: ja })}</span>
+            <div className={styles.postActions}>
+              <Link href={`/${thread.id}/posts/${post.id}/edit`} className={styles.anchor}>
+                編集
+              </Link>
+            </div>
           </div>
+          <p className={styles.postContent}>{post.content}</p>
         </div>
       ))}
 
@@ -66,8 +66,10 @@ export default async function ThreadDetail({ params, searchParams }: Props) {
         path={`/${threadId}`}
       />
 
-      <PostModal threadId={threadId} />
-      <DeleteThreadModal threadId={threadId} />
+      <div className={styles.modals}>
+        <PostModal threadId={threadId} />
+        <DeleteThreadModal threadId={threadId} />
+      </div>
     </div>
   );
 }
