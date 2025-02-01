@@ -1,14 +1,13 @@
 export type Thread = {
-  id: string;
+  id: number;
   title: string;
   createdAt: Date;
   updatedAt: Date;
   posts: Post[];
-  postsCount: number;
 };
 
 export type Post = {
-  id: string;
+  id: number;
   author: string;
   content: string;
   createdAt: Date;

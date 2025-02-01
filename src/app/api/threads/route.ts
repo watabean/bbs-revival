@@ -2,54 +2,32 @@ import { NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
 import { ThreadListResponse } from '@/types/api';
 
-export async function getThreads(page: number = 1) {
-  const ITEMS_PER_PAGE = 10;
-
-  const totalCount = await prisma.thread.count();
-  const threads = await prisma.thread.findMany({
-    skip: (page - 1) * ITEMS_PER_PAGE,
-    take: ITEMS_PER_PAGE,
-    orderBy: { createdAt: 'desc' },
-    include: {
-      posts: {
-        orderBy: { createdAt: 'desc' },
-      },
-    },
-  });
-
-  return {
-    threads: threads.map((thread) => ({
-      id: thread.id,
-      title: thread.title,
-      createdAt: thread.createdAt,
-      updatedAt: thread.updatedAt,
-      posts: thread.posts.map((post) => ({
-        id: post.id,
-        content: post.content,
-        createdAt: post.createdAt,
-      })),
-      postsCount: thread.posts.length,
-    })),
-    pagination: {
-      currentPage: page,
-      totalPages: Math.ceil(totalCount / ITEMS_PER_PAGE),
-      totalItems: totalCount,
-      itemsPerPage: ITEMS_PER_PAGE,
-    },
-  };
-}
-
 export async function GET(request: Request) {
   // クエリパラメータ取得
   const { searchParams } = new URL(request.url);
-  const pageParam = searchParams.get('page') ?? '1';
-  const limitParam = searchParams.get('limit') ?? '10';
+  const pageParam = Number(searchParams.get('page') ?? '1');
+  const limitParam = Number(searchParams.get('limit') ?? '10');
 
+  // ページネーション用のオフセット計算
+  const skip = (pageParam - 1) * limitParam;
+  const take = limitParam;
+
+  // 総スレッド数（論理削除を除外）
+  const totalItems = await prisma.thread.count({
+    where: { deletedAt: null },
+  });
+
+  // スレッド一覧取得（論理削除を考慮 & ページネーション適用）
   const threads = await prisma.thread.findMany({
-    orderBy: { createdAt: 'desc' },
+    where: { deletedAt: null },
+    orderBy: { id: 'desc' },
+    skip,
+    take,
     include: {
       posts: {
-        orderBy: { createdAt: 'desc' },
+        where: { deletedAt: null },
+        orderBy: { id: 'desc' },
+        take: 1, // 最新の1件のみ取得
       },
     },
   });
@@ -60,22 +38,15 @@ export async function GET(request: Request) {
       title: thread.title,
       createdAt: thread.createdAt,
       updatedAt: thread.updatedAt,
-      posts: thread.posts.map((post) => ({
-        id: post.id,
-        content: post.content,
-        createdAt: post.createdAt,
-      })),
-      postsCount: thread.posts.length,
+      posts: thread.posts[0] ? [{ ...thread.posts[0] }] : [],
     })),
     pagination: {
-      currentPage: Number(pageParam),
-      totalPages: 1,
-      totalItems: threads.length,
-      itemsPerPage: Number(limitParam),
+      currentPage: pageParam,
+      totalPages: Math.ceil(totalItems / limitParam),
+      totalItems,
+      itemsPerPage: limitParam,
     },
   };
-
-  console.log(response);
 
   return NextResponse.json(response, {
     headers: {

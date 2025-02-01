@@ -4,9 +4,10 @@ import styles from './Pagination.module.css';
 interface PaginationProps {
   currentPage: number;
   totalPages: number;
+  path: string;
 }
 
-export default function Pagination({ currentPage, totalPages }: PaginationProps) {
+export default function Pagination({ currentPage, totalPages, path }: PaginationProps) {
   const createPageRange = () => {
     const range: (number | string)[] = [];
     const delta = 2; // 表示する前後のページ数
@@ -47,7 +48,7 @@ export default function Pagination({ currentPage, totalPages }: PaginationProps)
   return (
     <div className={styles.pagination}>
       <Link
-        href={currentPage > 1 ? `/products?page=${currentPage - 1}` : '#'}
+        href={currentPage > 1 ? `${path}?page=${currentPage - 1}` : '#'}
         aria-disabled={currentPage === 1}
         className={`${styles.button} ${currentPage === 1 ? styles.disabled : ''}`}
       >
@@ -58,7 +59,7 @@ export default function Pagination({ currentPage, totalPages }: PaginationProps)
         typeof page === 'number' ? (
           <Link
             key={index}
-            href={`/products?page=${page}`}
+            href={`${path}?page=${page}`}
             className={`${styles.pageNumber} ${currentPage === page ? styles.active : ''}`}
           >
             {page}
@@ -71,7 +72,7 @@ export default function Pagination({ currentPage, totalPages }: PaginationProps)
       )}
 
       <Link
-        href={currentPage < totalPages ? `/products?page=${currentPage + 1}` : '#'}
+        href={currentPage < totalPages ? `${path}?page=${currentPage + 1}` : '#'}
         aria-disabled={currentPage === totalPages}
         className={`${styles.button} ${currentPage === totalPages ? styles.disabled : ''}`}
       >

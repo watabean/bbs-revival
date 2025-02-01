@@ -30,7 +30,7 @@ export default async function ThreadDetail({ params }: Props) {
       {thread.posts.map((post: Post, index) => (
         <div key={post.id} className={styles.post}>
           <p className={styles.postHeader}>
-            <span className={styles.postNumber}>{(index + 1).toString().padStart(4, '0')}</span>
+            <span className={styles.postNumber}>{(index + 1).toString().padStart(4, '0')}</span>{' '}
             {post.author}：{format(post.createdAt, 'yyyy/MM/dd(E) HH:mm:ss.SS', { locale: ja })}
           </p>
           <p className={styles.postContent}>{post.content}</p>
@@ -42,7 +42,7 @@ export default async function ThreadDetail({ params }: Props) {
         </div>
       ))}
 
-      <Pagination currentPage={1} totalPages={5} />
+      <Pagination currentPage={1} totalPages={5} path={`/${threadId}`} />
 
       <div className={styles.formContainer}>
         <textarea className={styles.textarea} placeholder="新しい投稿を入力..." />
