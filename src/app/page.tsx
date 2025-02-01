@@ -40,6 +40,9 @@ export default async function Home({ searchParams }: Props) {
               <h2>{thread.title}</h2>
               {thread.posts[0] && (
                 <>
+                  <p className={styles.lastPost}>
+                    投稿者: {thread.posts[0].author ?? process.env.NO_NAME}
+                  </p>
                   <p className={styles.lastPost}>最新投稿: {thread.posts[0].content}</p>
                   <p className={styles.lastPost}>
                     投稿日時:{' '}
@@ -51,7 +54,7 @@ export default async function Home({ searchParams }: Props) {
           ))}
         </div>
 
-        <Link href="/thread/new" className={styles.newThreadButton}>
+        <Link href="/new" className={styles.newThreadButton}>
           新しいスレッドを作成
         </Link>
         <Pagination

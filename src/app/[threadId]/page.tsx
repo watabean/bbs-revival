@@ -44,7 +44,8 @@ export default async function ThreadDetail({ params, searchParams }: Props) {
         <div key={post.id} className={styles.post}>
           <p className={styles.postHeader}>
             <span className={styles.postNumber}>{(index + 1).toString().padStart(4, '0')}</span>{' '}
-            {post.author}：{format(post.createdAt, 'yyyy/MM/dd(E) HH:mm:ss.SS', { locale: ja })}
+            {post.author ?? process.env.NO_NAME}：
+            {format(post.createdAt, 'yyyy/MM/dd(E) HH:mm:ss.SS', { locale: ja })}
           </p>
           <p className={styles.postContent}>{post.content}</p>
           <div className={styles.postActions}>
