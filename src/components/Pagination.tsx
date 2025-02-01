@@ -8,42 +8,49 @@ interface PaginationProps {
 }
 
 export default function Pagination({ currentPage, totalPages, path }: PaginationProps) {
-  const createPageRange = () => {
-    const range: (number | string)[] = [];
-    const delta = 2; // 表示する前後のページ数
+  // 前後に何ページを表示するか
+  const delta = 2;
 
-    if (totalPages <= 7) {
-      return Array.from({ length: totalPages }, (_, i) => i + 1);
-    }
+  // ページ配列を作る関数
+  const createPageRange = (current: number, total: number, delta: number) => {
+    const pages: (number | string)[] = [];
 
-    if (currentPage > delta + 2) {
-      range.push(1, '...');
-    } else {
-      for (let i = 1; i < currentPage; i++) {
-        range.push(i);
+    // ページ総数が（2*delta + 1）以下なら、そのまま全部表示
+    if (total <= 2 * delta + 1) {
+      for (let i = 1; i <= total; i++) {
+        pages.push(i);
       }
+      return pages;
     }
 
-    for (
-      let i = Math.max(1, currentPage - delta);
-      i <= Math.min(totalPages, currentPage + delta);
-      i++
-    ) {
-      range.push(i);
+    // 1ページ目は必ず表示
+    pages.push(1);
+
+    // 「…」を入れるかどうか判断する基準
+    // current - delta > 2 なら、1 と 2 の間が大きく空くので「…」表示
+    if (current - delta > 2) {
+      pages.push('...');
     }
 
-    if (currentPage < totalPages - delta - 1) {
-      range.push('...', totalPages);
-    } else {
-      for (let i = currentPage + 1; i <= totalPages; i++) {
-        range.push(i);
-      }
+    // 中間ページ： max(2, current - delta) から min(total - 1, current + delta) まで
+    const start = Math.max(2, current - delta);
+    const end = Math.min(total - 1, current + delta);
+    for (let i = start; i <= end; i++) {
+      pages.push(i);
     }
 
-    return range;
+    // current + delta < total - 1 なら、最後のページとの間が大きく空くので「…」表示
+    if (current + delta < total - 1) {
+      pages.push('...');
+    }
+
+    // 最後のページは必ず表示
+    pages.push(total);
+
+    return pages;
   };
 
-  const pages = createPageRange();
+  const pages = createPageRange(currentPage, totalPages, delta);
 
   return (
     <div className={styles.pagination}>

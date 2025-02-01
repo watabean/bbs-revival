@@ -27,6 +27,12 @@ export default async function ThreadDetail({ params }: Props) {
       </div>
       <h1 className={styles.threadTitle}>{thread.title}</h1>
 
+      <Pagination
+        currentPage={pagination.currentPage}
+        totalPages={pagination.totalPages}
+        path={`/${threadId}`}
+      />
+
       {thread.posts.map((post: Post, index: number) => (
         <div key={post.id} className={styles.post}>
           <p className={styles.postHeader}>

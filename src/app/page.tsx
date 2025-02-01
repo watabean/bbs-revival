@@ -28,6 +28,12 @@ export default async function Home({ searchParams }: Props) {
       <main className={styles.main}>
         <h1 className={styles.title}>掲示板</h1>
 
+        <Pagination
+          currentPage={pagination.currentPage}
+          totalPages={pagination.totalPages}
+          path="/"
+        />
+
         <div className={styles.threadList}>
           {threads.map((thread) => (
             <Link key={thread.id} href={thread.id.toString()} className={styles.threadItem}>
