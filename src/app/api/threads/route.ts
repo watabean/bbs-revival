@@ -4,7 +4,7 @@ import { ThreadListResponse } from '@/types/api';
 
 export async function getThreads(page: number = 1) {
   const ITEMS_PER_PAGE = 10;
-  
+
   const totalCount = await prisma.thread.count();
   const threads = await prisma.thread.findMany({
     skip: (page - 1) * ITEMS_PER_PAGE,
@@ -55,18 +55,18 @@ export async function GET(request: Request) {
   });
 
   const response: ThreadListResponse = {
-      threads: threads.map((thread) => ({
-        id: thread.id,
-        title: thread.title,
-        createdAt: thread.createdAt,
-        updatedAt: thread.updatedAt,
-        posts: thread.posts.map((post) => ({
-          id: post.id,
-          content: post.content,
-          createdAt: post.createdAt,
-        })),
-        postsCount: thread.posts.length,
+    threads: threads.map((thread) => ({
+      id: thread.id,
+      title: thread.title,
+      createdAt: thread.createdAt,
+      updatedAt: thread.updatedAt,
+      posts: thread.posts.map((post) => ({
+        id: post.id,
+        content: post.content,
+        createdAt: post.createdAt,
       })),
+      postsCount: thread.posts.length,
+    })),
     pagination: {
       currentPage: Number(pageParam),
       totalPages: 1,
