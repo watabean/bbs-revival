@@ -1,0 +1,116 @@
+.postButton {
+  background: #3b82f6;
+  color: white;
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 0.5rem;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  margin-top: 1rem;
+}
+
+.postButton:hover {
+  background: #2563eb;
+}
+
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal {
+  background: white;
+  padding: 2.5rem; /* 余白を少し広げる */
+  border-radius: 1rem; /* 角を少し丸く */
+  text-align: center;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+  width: 95%;
+  max-width: 500px; /* 幅を大きめにする */
+  animation: fadeIn 0.2s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.modalTitle {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-bottom: 1.5rem;
+  color: #333;
+}
+
+.input,
+.textarea {
+  width: 100%;
+  padding: 1rem; /* 入力しやすくするため余白増やす */
+  border: 1px solid #e5e7eb;
+  border-radius: 0.5rem;
+  font-size: 1rem;
+  margin-bottom: 1.2rem; /* 余白を統一 */
+}
+
+.textarea {
+  min-height: 150px; /* 高さを少し大きめに */
+  resize: vertical;
+}
+
+.error {
+  color: #dc2626;
+  font-size: 0.875rem;
+  margin-bottom: 1rem;
+}
+
+.modalActions {
+  display: flex;
+  justify-content: space-between;
+  gap: 1.2rem;
+}
+
+.confirmPostButton {
+  background: #3b82f6;
+  color: white;
+  padding: 0.85rem 1.8rem; /* ボタンを少し大きく */
+  border: none;
+  border-radius: 0.5rem;
+  font-size: 1rem;
+  cursor: pointer;
+  flex: 1;
+  transition: background-color 0.2s;
+}
+
+.confirmPostButton:hover {
+  background: #2563eb;
+}
+
+.cancelButton {
+  background: #6b7280;
+  color: white;
+  padding: 0.85rem 1.8rem;
+  border: none;
+  border-radius: 0.5rem;
+  font-size: 1rem;
+  cursor: pointer;
+  flex: 1;
+  transition: background-color 0.2s;
+}
+
+.cancelButton:hover {
+  background: #4b5563;
+}

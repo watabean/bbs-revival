@@ -4,6 +4,7 @@ import Link from 'next/link';
 
 import DeleteThreadModal from '@/components/DeleteThreadModal';
 import Pagination from '@/components/Pagination';
+import PostModal from '@/components/PostModal';
 import { Post } from '@/types/api';
 
 import styles from './page.module.css';
@@ -65,14 +66,7 @@ export default async function ThreadDetail({ params, searchParams }: Props) {
         path={`/${threadId}`}
       />
 
-      <div className={styles.formContainer}>
-        <textarea className={styles.textarea} placeholder="新しい投稿を入力..." />
-        <button type="submit" className={styles.button}>
-          投稿する
-        </button>
-      </div>
-
-      {/* クライアントコンポーネントのモーダル */}
+      <PostModal threadId={threadId} />
       <DeleteThreadModal threadId={threadId} />
     </div>
   );
