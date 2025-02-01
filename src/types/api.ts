@@ -8,7 +8,7 @@ export type Thread = {
 
 export type Post = {
   id: number;
-  author: string;
+  author: string | null;
   content: string;
   createdAt: Date;
   updatedAt: Date;

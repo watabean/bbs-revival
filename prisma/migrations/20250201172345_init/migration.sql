@@ -11,7 +11,7 @@ CREATE TABLE "Thread" (
 CREATE TABLE "Post" (
     "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
     "content" TEXT NOT NULL,
-    "author" TEXT NOT NULL,
+    "author" TEXT,
     "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" DATETIME NOT NULL,
     "deletedAt" DATETIME,
