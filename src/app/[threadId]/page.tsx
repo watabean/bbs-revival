@@ -4,6 +4,7 @@ import Link from 'next/link';
 
 import DeleteThreadModal from '@/components/DeleteThreadModal';
 import Pagination from '@/components/Pagination';
+import PostEditModal from '@/components/PostEditModal';
 import PostModal from '@/components/PostModal';
 import { Post } from '@/types/api';
 
@@ -51,9 +52,12 @@ export default async function ThreadDetail({ params, searchParams }: Props) {
             <span>{post.author ?? process.env.NO_NAME}：</span>
             <span>{format(post.createdAt, 'yyyy/MM/dd(E) HH:mm:ss.SS', { locale: ja })}</span>
             <div className={styles.postActions}>
-              <Link href={`/${thread.id}/posts/${post.id}/edit`} className={styles.anchor}>
-                編集
-              </Link>
+              <PostEditModal
+                threadId={thread.id}
+                postId={post.id}
+                initialContent={post.content}
+                initialAuthor={post.author}
+              />
             </div>
           </div>
           <p className={styles.postContent}>{post.content}</p>
