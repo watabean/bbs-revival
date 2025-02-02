@@ -41,13 +41,14 @@ export default async function Home({ searchParams }: Props) {
               {thread.posts[0] && (
                 <>
                   <p className={styles.lastPost}>
-                    投稿者: {thread.posts[0].author ?? process.env.NO_NAME}
+                    <span>{thread.posts[0].author ?? process.env.NO_NAME}：</span>
+                    <span>
+                      {format(thread.posts[0].createdAt, 'yyyy/MM/dd(E) HH:mm:ss.SS', {
+                        locale: ja,
+                      })}
+                    </span>
                   </p>
-                  <p className={styles.lastPost}>最新投稿: {thread.posts[0].content}</p>
-                  <p className={styles.lastPost}>
-                    投稿日時:{' '}
-                    {format(thread.posts[0].createdAt, 'yyyy/MM/dd(E) HH:mm:ss.SS', { locale: ja })}
-                  </p>
+                  <p className={styles.lastPost}>{thread.posts[0].content}</p>
                 </>
               )}
             </Link>
