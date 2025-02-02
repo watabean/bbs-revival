@@ -47,6 +47,7 @@
   margin: 5px 0;
   font-size: 16px;
   color: #333;
+  white-space: pre-wrap;
 }
 
 .postActions a {

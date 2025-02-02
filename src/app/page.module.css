@@ -49,6 +49,7 @@
   color: #6b7280;
   font-size: 0.875rem;
   margin-bottom: 0.5rem;
+  white-space: pre-wrap;
 }
 
 .postCount {
