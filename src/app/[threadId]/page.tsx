@@ -25,9 +25,7 @@ export default async function ThreadDetail({ params, searchParams }: Props) {
   }
 
   // APIからスレッドデータを取得
-  const res = await fetch(url, {
-    next: { revalidate: 60 }, // ISRで60秒キャッシュ
-  });
+  const res = await fetch(url);
   const { thread, pagination } = await res.json();
 
   return (

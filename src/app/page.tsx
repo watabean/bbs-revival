@@ -20,9 +20,7 @@ export default async function Home({ searchParams }: Props) {
   }
 
   // APIからスレッドデータを取得
-  const res = await fetch(url, {
-    next: { revalidate: 60 }, // ISRで60秒キャッシュ
-  });
+  const res = await fetch(url);
   const { threads, pagination }: ThreadListResponse = await res.json();
 
   return (
