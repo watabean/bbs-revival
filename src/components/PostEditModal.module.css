@@ -1,16 +1,8 @@
-.editButton {
-  background: #3b82f6;
-  color: white;
-  padding: 0.6rem 1.2rem;
+.menuButton {
+  background: none;
   border: none;
-  border-radius: 0.5rem;
-  font-size: 0.8rem;
   cursor: pointer;
-  transition: background-color 0.2s;
-}
-
-.editButton:hover {
-  background: #2563eb;
+  padding: 0.3rem;
 }
 
 .modalOverlay {

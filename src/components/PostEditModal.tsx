@@ -1,5 +1,6 @@
 'use client';
 
+import { MoreHorizontal } from 'lucide-react'; // アイコン
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
@@ -51,7 +52,7 @@ export default function PostEditModal({ threadId, postId, initialContent, initia
 
     if (res.ok) {
       setShowModal(false);
-      router.refresh(); // 編集後にページをリフレッシュ
+      router.refresh();
     } else {
       setError('編集に失敗しました。');
     }
@@ -78,7 +79,7 @@ export default function PostEditModal({ threadId, postId, initialContent, initia
 
     if (res.ok) {
       setShowModal(false);
-      router.refresh(); // 削除後にページをリフレッシュ
+      router.refresh();
     } else {
       setDeleteError('削除に失敗しました。パスワードを確認してください。');
     }
@@ -86,10 +87,11 @@ export default function PostEditModal({ threadId, postId, initialContent, initia
 
   return (
     <>
-      <button onClick={() => setShowModal(true)} className={styles.editButton}>
-        編集
+      <button onClick={() => setShowModal(true)} className={styles.menuButton}>
+        <MoreHorizontal size={20} />
       </button>
 
+      {/* 編集 & 削除モーダル */}
       {showModal && (
         <div className={styles.modalOverlay}>
           <div className={styles.modal}>
