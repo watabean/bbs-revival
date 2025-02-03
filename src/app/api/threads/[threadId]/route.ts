@@ -30,14 +30,10 @@ export async function GET(request: NextRequest, { params }: Props) {
     where: { id: Number(threadId), deletedAt: null },
     include: {
       posts: {
-        where: {
-          deletedAt: null,
-        },
+        where: { deletedAt: null },
         skip,
         take,
-        orderBy: {
-          id: 'asc',
-        },
+        orderBy: { id: 'asc' },
       },
     },
   });
@@ -46,8 +42,13 @@ export async function GET(request: NextRequest, { params }: Props) {
     return NextResponse.json({ error: 'Thread not found' }, { status: 404 });
   }
 
+  const postsWithIndex = thread.posts.map((post, index) => ({
+    ...post,
+    postNumber: skip + index + 1, // 何番目の投稿か
+  }));
+
   const response: PostListResponse = {
-    thread: thread,
+    thread: { ...thread, posts: postsWithIndex },
     pagination: {
       currentPage: pageParam,
       totalPages: Math.ceil(totalItems / limitParam),

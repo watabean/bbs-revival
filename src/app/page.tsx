@@ -40,14 +40,15 @@ export default async function Home({ searchParams }: Props) {
               <h2>{thread.title}</h2>
               {thread.posts[0] && (
                 <>
-                  <p className={styles.lastPost}>
+                  <div className={styles.lastPost}>
+                    <span>{thread.posts[0].postNumber?.toString().padStart(4, '0')}</span>
                     <span>{thread.posts[0].author ?? process.env.NO_NAME}：</span>
                     <span>
                       {format(thread.posts[0].createdAt, 'yyyy/MM/dd(E) HH:mm:ss.SS', {
                         locale: ja,
                       })}
                     </span>
-                  </p>
+                  </div>
                   <p className={styles.lastPost}>{thread.posts[0].content}</p>
                 </>
               )}

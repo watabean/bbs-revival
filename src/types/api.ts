@@ -12,6 +12,7 @@ export type Post = {
   content: string;
   createdAt: Date;
   updatedAt: Date;
+  postNumber?: number;
 };
 
 export type Pagination = {

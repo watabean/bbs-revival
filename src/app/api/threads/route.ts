@@ -30,6 +30,9 @@ export async function GET(request: Request) {
         orderBy: { id: 'desc' },
         take: 1, // 最新の1件のみ取得
       },
+      _count: {
+        select: { posts: true }, // スレッド内の投稿総数を取得
+      },
     },
   });
 
@@ -39,7 +42,14 @@ export async function GET(request: Request) {
       title: thread.title,
       createdAt: thread.createdAt,
       updatedAt: thread.updatedAt,
-      posts: thread.posts[0] ? [{ ...thread.posts[0] }] : [],
+      posts: thread.posts[0]
+        ? [
+            {
+              ...thread.posts[0],
+              postNumber: thread._count.posts,
+            },
+          ]
+        : [],
     })),
     pagination: {
       currentPage: pageParam,

@@ -43,10 +43,10 @@ export default async function ThreadDetail({ params, searchParams }: Props) {
         path={`/${threadId}`}
       />
 
-      {thread.posts.map((post: Post, index: number) => (
+      {thread.posts.map((post: Post) => (
         <div key={post.id} className={styles.post}>
           <div className={styles.postHeader}>
-            <span className={styles.postNumber}>{(index + 1).toString().padStart(4, '0')}</span>
+            <span>{post.postNumber?.toString().padStart(4, '0')}</span>
             <span>{post.author ?? process.env.NO_NAME}：</span>
             <span>{format(post.createdAt, 'yyyy/MM/dd(E) HH:mm:ss.SS', { locale: ja })}</span>
             <div className={styles.postActions}>
