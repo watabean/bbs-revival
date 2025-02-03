@@ -60,14 +60,27 @@ export async function GET(request: NextRequest, { params }: Props) {
   return NextResponse.json(response);
 }
 
-export async function DELETE(_request: NextRequest, { params }: Props) {
-  const { threadId } = await params;
-
-  if (!Number(threadId)) {
-    return new Response(JSON.stringify({ error: 'Missing threadId' }), { status: 400 });
-  }
-
+export async function DELETE(request: NextRequest, { params }: Props) {
   try {
+    const { threadId } = await params;
+    const { password } = await request.json();
+
+    if (!Number(threadId)) {
+      return new Response(JSON.stringify({ error: 'Missing threadId' }), { status: 400 });
+    }
+
+    const thread = await prisma.thread.findUnique({
+      where: { id: Number(threadId) },
+    });
+
+    if (!thread) {
+      return NextResponse.json({ error: 'Thread not found' }, { status: 404 });
+    }
+
+    if (thread.updatePassword !== password) {
+      return NextResponse.json({ error: 'Invalid password' }, { status: 403 });
+    }
+
     await prisma.thread.update({
       where: { id: Number(threadId) },
       data: { deletedAt: new Date() },

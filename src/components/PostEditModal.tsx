@@ -13,19 +13,26 @@ type Props = {
   initialAuthor: string | null;
 };
 
-export default function PostEditModal({ threadId, postId, initialContent, initialAuthor }: Props) {
+export default function PostEditModal({ postId, initialContent, initialAuthor }: Props) {
   const router = useRouter();
   const [showModal, setShowModal] = useState(false);
   const [author, setAuthor] = useState(initialAuthor || '');
   const [content, setContent] = useState(initialContent);
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
-  const [deleteError, setDeleteError] = useState('');
 
   useEffect(() => {
     setAuthor(initialAuthor || '');
     setContent(initialContent);
   }, [initialAuthor, initialContent]);
+
+  const onClickCancel = () => {
+    setAuthor(initialAuthor || '');
+    setContent(initialContent);
+    setPassword('');
+    setError('');
+    setShowModal(false);
+  };
 
   const handleEdit = async () => {
     setError('');
@@ -39,49 +46,43 @@ export default function PostEditModal({ threadId, postId, initialContent, initia
       return;
     }
 
-    const res = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/api/threads/${threadId}/posts/${postId}`,
-      {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ author: author.trim() || null, content, password }),
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/post/${postId}`, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
       },
-    );
+      body: JSON.stringify({ author: author.trim() || null, content, password }),
+    });
 
     if (res.ok) {
       setShowModal(false);
       router.refresh();
     } else {
-      setError('編集に失敗しました。');
+      setError('編集に失敗しました。パスワードを確認してください。');
     }
   };
 
   const handleDelete = async () => {
-    setDeleteError('');
+    setError('');
 
     if (!password.trim()) {
-      setDeleteError('パスワードを入力してください。');
+      setError('パスワードを入力してください。');
       return;
     }
 
-    const res = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/api/threads/${threadId}/posts/${postId}`,
-      {
-        method: 'DELETE',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ password }),
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/post/${postId}`, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
       },
-    );
+      body: JSON.stringify({ password }),
+    });
 
     if (res.ok) {
       setShowModal(false);
       router.refresh();
     } else {
-      setDeleteError('削除に失敗しました。パスワードを確認してください。');
+      setError('削除に失敗しました。パスワードを確認してください。');
     }
   };
 
@@ -120,22 +121,20 @@ export default function PostEditModal({ threadId, postId, initialContent, initia
               placeholder="パスワードを入力"
             />
 
-            {error && <p className={styles.error}>{error}</p>}
-
             <div className={styles.modalActions}>
               <button onClick={handleEdit} className={styles.confirmEditButton}>
                 保存する
               </button>
-              <button onClick={() => setShowModal(false)} className={styles.cancelButton}>
+              <button onClick={onClickCancel} className={styles.cancelButton}>
                 キャンセル
               </button>
             </div>
 
-            {deleteError && <p className={styles.error}>{deleteError}</p>}
-
             <button onClick={handleDelete} className={styles.deleteButton}>
               削除する
             </button>
+
+            {error && <p className={styles.error}>{error}</p>}
           </div>
         </div>
       )}

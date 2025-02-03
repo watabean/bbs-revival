@@ -27,8 +27,9 @@ export default function NewThreadPage() {
     });
 
     if (res.ok) {
-      const { id } = await res.json();
-      router.push(`/${id}`);
+      const { thread, updatePassword } = await res.json();
+      prompt('スレッドを作成しました。削除/更新用パスワードを控えてください', updatePassword);
+      router.push(`/${thread.id}`);
     } else {
       alert('スレッド作成に失敗しました');
     }

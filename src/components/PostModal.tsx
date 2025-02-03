@@ -36,6 +36,8 @@ export default function PostModal({ threadId }: Props) {
       setShowModal(false);
       setAuthor('');
       setContent('');
+      const { updatePassword } = await res.json();
+      prompt('投稿しました。削除/更新用パスワードを控えてください', updatePassword);
       router.refresh(); // 投稿後にページをリフレッシュ
     } else {
       setError('投稿に失敗しました。');
