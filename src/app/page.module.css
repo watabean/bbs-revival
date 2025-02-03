@@ -46,15 +46,17 @@
 }
 
 .lastPost {
+  display: flex;
+  gap: 5;
+  align-items: center;
   color: #6b7280;
   font-size: 0.875rem;
   margin-bottom: 0.5rem;
   white-space: pre-wrap;
 }
 
-.postCount {
-  color: #6b7280;
-  font-size: 0.875rem;
+.lastPost span {
+  line-height: 1;
 }
 
 .newThreadButton {

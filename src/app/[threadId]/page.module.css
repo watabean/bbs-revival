@@ -4,6 +4,10 @@
   gap: 5;
 }
 
+.postHeader span {
+  line-height: 1;
+}
+
 .topLink {
   margin-bottom: 16px;
   text-align: left;
@@ -52,7 +56,6 @@
 
 .postActions a {
   display: inline-block;
-  padding: 5px 10px;
   background: #0070f3;
   color: #fff;
   text-decoration: none;
