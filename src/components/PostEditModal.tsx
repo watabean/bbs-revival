@@ -7,7 +7,7 @@ import { useEffect, useState } from 'react';
 import styles from './PostEditModal.module.css';
 
 type Props = {
-  threadId: string;
+  threadId: number;
   postId: number;
   initialContent: string;
   initialAuthor: string | null;

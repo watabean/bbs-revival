@@ -6,7 +6,7 @@ import DeleteThreadModal from '@/components/DeleteThreadModal';
 import Pagination from '@/components/Pagination';
 import PostEditModal from '@/components/PostEditModal';
 import PostModal from '@/components/PostModal';
-import { Post } from '@/types/api';
+import { Pagination as PaginationType, Post, Thread } from '@/types/api';
 
 import styles from './page.module.css';
 
@@ -26,7 +26,7 @@ export default async function ThreadDetail({ params, searchParams }: Props) {
 
   // APIからスレッドデータを取得
   const res = await fetch(url);
-  const { thread, pagination } = await res.json();
+  const { thread, pagination }: { thread: Thread; pagination: PaginationType } = await res.json();
 
   return (
     <div className={styles.container}>
