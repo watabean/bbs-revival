@@ -3,12 +3,13 @@ import { ja } from 'date-fns/locale';
 import Link from 'next/link';
 
 import Pagination from '@/components/Pagination';
+import SearchForm from '@/components/SearchForm';
 import { ThreadListResponse } from '@/types/api';
 
 import styles from './page.module.css';
 
 type Props = {
-  searchParams: Promise<{ page: number }>;
+  searchParams: Promise<{ page?: number }>;
 };
 
 export default async function Home({ searchParams }: Props) {
@@ -28,6 +29,8 @@ export default async function Home({ searchParams }: Props) {
       <main className={styles.main}>
         <h1 className={styles.title}>掲示板</h1>
 
+        <SearchForm query={''} />
+
         <Pagination
           currentPage={pagination.currentPage}
           totalPages={pagination.totalPages}
@@ -41,7 +44,7 @@ export default async function Home({ searchParams }: Props) {
               {thread.posts[0] && (
                 <>
                   <div className={styles.lastPost}>
-                    <span>{thread.posts[0].postNumber?.toString().padStart(4, '0')}</span>
+                    <span>{thread.posts[0].postNumber?.toString().padStart(4, '0')}</span>{' '}
                     <span>{thread.posts[0].author ?? process.env.NO_NAME}：</span>
                     <span>
                       {format(thread.posts[0].createdAt, 'yyyy/MM/dd(E) HH:mm:ss.SS', {
