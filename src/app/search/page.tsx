@@ -59,8 +59,8 @@ export default async function SearchResultPage({ searchParams }: Props) {
               {(thread.filteredPosts?.length ? thread.filteredPosts : thread.posts)
                 .slice(0, MAX_POST_COUNT)
                 .map((post) => (
-                  <>
-                    <div key={post.id} className={styles.lastPost}>
+                  <div key={post.id}>
+                    <div className={styles.lastPost}>
                       {/* <span>{post.postNumber?.toString().padStart(4, '0')}</span> */}
                       <span>{post.author ?? process.env.NO_NAME}：</span>
                       <span>
@@ -70,7 +70,7 @@ export default async function SearchResultPage({ searchParams }: Props) {
                       </span>
                     </div>
                     <p className={styles.lastPost}>{highlightMatch(post.content, query)}</p>
-                  </>
+                  </div>
                 ))}
             </Link>
           ))}
