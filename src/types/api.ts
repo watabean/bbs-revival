@@ -4,6 +4,7 @@ export type Thread = {
   createdAt: Date;
   updatedAt: Date;
   posts: Post[];
+  filteredPosts?: Post[];
 };
 
 export type Post = {
