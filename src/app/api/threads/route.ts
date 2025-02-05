@@ -1,6 +1,11 @@
 import cryptoRandomString from 'crypto-random-string';
 import { NextResponse } from 'next/server';
 
+import {
+  MAX_LENGTH_AUTHOR,
+  MAX_LENGTH_CONTENT,
+  MAX_LENGTH_THREAD_TITLE,
+} from '@/constants/constants';
 import prisma from '@/lib/prisma';
 import { Post, ThreadListResponse } from '@/types/api';
 
@@ -89,6 +94,15 @@ export async function POST(request: Request) {
     }
     if (!content) {
       return NextResponse.json({ error: 'Content is required' }, { status: 400 });
+    }
+    if (title.length > MAX_LENGTH_THREAD_TITLE) {
+      return NextResponse.json({ error: 'Title is too long' }, { status: 400 });
+    }
+    if (author.length > MAX_LENGTH_AUTHOR) {
+      return NextResponse.json({ error: 'Author name is too long' }, { status: 400 });
+    }
+    if (content.length > MAX_LENGTH_CONTENT) {
+      return NextResponse.json({ error: 'Content is too long' }, { status: 400 });
     }
 
     const result = await prisma.$transaction(async (tx) => {

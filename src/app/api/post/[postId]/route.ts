@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 
+import { MAX_LENGTH_CONTENT } from '@/constants/constants';
 import prisma from '@/lib/prisma';
 
 type Props = {
@@ -53,6 +54,10 @@ export async function PATCH(request: Request, { params }: Props) {
 
     if (post.updatePassword !== password) {
       return NextResponse.json({ error: 'Invalid password' }, { status: 401 });
+    }
+
+    if (content.length > MAX_LENGTH_CONTENT) {
+      return NextResponse.json({ error: 'Content is too long' }, { status: 400 });
     }
 
     // 投稿更新

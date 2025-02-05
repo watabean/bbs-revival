@@ -1,7 +1,7 @@
 import cryptoRandomString from 'crypto-random-string';
 import { NextResponse } from 'next/server';
 
-import { MAX_POSTS_PER_THREAD } from '@/constants/constants';
+import { MAX_LENGTH_AUTHOR, MAX_LENGTH_CONTENT, MAX_POSTS_PER_THREAD } from '@/constants/constants';
 import prisma from '@/lib/prisma';
 
 export async function POST(request: Request) {
@@ -15,6 +15,12 @@ export async function POST(request: Request) {
     }
     if (!Number(threadId)) {
       return NextResponse.json({ error: 'ThreadId is required' }, { status: 400 });
+    }
+    if (content.length > MAX_LENGTH_CONTENT) {
+      return NextResponse.json({ error: 'Content is too long' }, { status: 400 });
+    }
+    if (author.length > MAX_LENGTH_AUTHOR) {
+      return NextResponse.json({ error: 'name is too long' }, { status: 400 });
     }
 
     // スレッドを検索
