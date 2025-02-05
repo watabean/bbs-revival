@@ -56,6 +56,11 @@ const messages = [
 ];
 
 async function main() {
+  if (process.env.NODE_ENV === 'test') {
+    // テスト時はDBを空にする
+    return;
+  }
+
   for (let i = 1; i <= 100; i++) {
     const thread = await prisma.thread.create({
       data: {
