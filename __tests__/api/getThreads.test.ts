@@ -73,7 +73,7 @@ describe('GET /threads エンドポイント', () => {
           title: 'Thread 1',
           createdAt: '2023-01-01T00:00:00.000Z',
           updatedAt: '2023-01-01T00:00:00.000Z',
-          posts: [{ id: 101, content: 'First post', deletedAt: null, postNumber: 3 }],
+          posts: [{ id: 101, content: 'First post', postNumber: 3 }],
         },
         {
           id: 2,

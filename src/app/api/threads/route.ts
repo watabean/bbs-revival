@@ -2,7 +2,7 @@ import cryptoRandomString from 'crypto-random-string';
 import { NextResponse } from 'next/server';
 
 import prisma from '@/lib/prisma';
-import { ThreadListResponse } from '@/types/api';
+import { Post, ThreadListResponse } from '@/types/api';
 
 export async function GET(request: Request) {
   try {
@@ -39,20 +39,27 @@ export async function GET(request: Request) {
     });
 
     const response: ThreadListResponse = {
-      threads: threads.map((thread) => ({
-        id: thread.id,
-        title: thread.title,
-        createdAt: thread.createdAt,
-        updatedAt: thread.updatedAt,
-        posts: thread.posts[0]
-          ? [
-              {
-                ...thread.posts[0],
-                postNumber: thread._count.posts,
-              },
-            ]
-          : [],
-      })),
+      threads: threads.map((thread) => {
+        const post: Post = thread.posts[0];
+        return {
+          id: thread.id,
+          title: thread.title,
+          createdAt: thread.createdAt,
+          updatedAt: thread.updatedAt,
+          posts: thread.posts[0]
+            ? [
+                {
+                  id: post.id,
+                  author: post.author,
+                  content: post.content,
+                  createdAt: post.createdAt,
+                  updatedAt: post.updatedAt,
+                  postNumber: thread._count.posts,
+                },
+              ]
+            : [],
+        };
+      }),
       pagination: {
         currentPage: pageParam,
         totalPages: Math.ceil(totalItems / limitParam),
