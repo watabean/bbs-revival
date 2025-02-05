@@ -65,12 +65,14 @@ async function main() {
     const thread = await prisma.thread.create({
       data: {
         title: threadTitles[Math.floor(Math.random() * threadTitles.length)],
+        updatePassword: 'password', // すべてのスレッドに同じパスワードを設定
         posts: {
           create: Array.from(
             { length: Math.floor(Math.random() * 200) + 50 }, // 50〜250のランダム投稿数
             () => ({
               content: messages[Math.floor(Math.random() * messages.length)],
               author: users[Math.floor(Math.random() * users.length)],
+              updatePassword: 'password', // すべての投稿に同じパスワードを設定
             }),
           ),
         },
