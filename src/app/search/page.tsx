@@ -3,6 +3,7 @@ import { ja } from 'date-fns/locale';
 import Link from 'next/link';
 
 import SearchForm from '@/components/SearchForm';
+import { DEFAULT_AUTHOR_NAME } from '@/constants/constants';
 import { Thread } from '@/types/api';
 
 import styles from './page.module.css';
@@ -62,7 +63,7 @@ export default async function SearchResultPage({ searchParams }: Props) {
                   <div key={post.id}>
                     <div className={styles.lastPost}>
                       {/* <span>{post.postNumber?.toString().padStart(4, '0')}</span> */}
-                      <span>{post.author ?? process.env.NO_NAME}：</span>
+                      <span>{post.author || DEFAULT_AUTHOR_NAME}：</span>
                       <span>
                         {format(post.createdAt, 'yyyy/MM/dd(E) HH:mm:ss.SS', {
                           locale: ja,

@@ -6,6 +6,7 @@ import DeleteThreadModal from '@/components/DeleteThreadModal';
 import Pagination from '@/components/Pagination';
 import PostEditModal from '@/components/PostEditModal';
 import PostModal from '@/components/PostModal';
+import { DEFAULT_AUTHOR_NAME } from '@/constants/constants';
 import { Pagination as PaginationType, Post, Thread } from '@/types/api';
 
 import styles from './page.module.css';
@@ -47,7 +48,7 @@ export default async function ThreadDetail({ params, searchParams }: Props) {
         <div key={post.id} className={styles.post}>
           <div className={styles.postHeader}>
             <span>{post.postNumber?.toString().padStart(4, '0')}</span>
-            <span>{post.author ?? process.env.NO_NAME}：</span>
+            <span>{post.author || DEFAULT_AUTHOR_NAME}：</span>
             <span>{format(post.createdAt, 'yyyy/MM/dd(E) HH:mm:ss.SS', { locale: ja })}</span>
             <div className={styles.postActions}>
               <PostEditModal

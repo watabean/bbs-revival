@@ -1,6 +1,7 @@
 import cryptoRandomString from 'crypto-random-string';
 import { NextResponse } from 'next/server';
 
+import { MAX_POSTS_PER_THREAD } from '@/constants/constants';
 import prisma from '@/lib/prisma';
 
 export async function POST(request: Request) {
@@ -20,11 +21,21 @@ export async function POST(request: Request) {
     const thread = await prisma.thread.findUnique({
       where: {
         id: Number(threadId),
+        deletedAt: null,
+      },
+      include: {
+        _count: {
+          select: { posts: true },
+        },
       },
     });
 
     if (!thread) {
       return NextResponse.json({ error: 'Thread not found' }, { status: 404 });
+    }
+
+    if (thread?._count.posts >= MAX_POSTS_PER_THREAD) {
+      return NextResponse.json({ error: 'Thread has reached the post limit' }, { status: 403 });
     }
 
     const newPost = await prisma.post.create({

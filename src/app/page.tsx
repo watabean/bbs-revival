@@ -4,6 +4,7 @@ import Link from 'next/link';
 
 import Pagination from '@/components/Pagination';
 import SearchForm from '@/components/SearchForm';
+import { DEFAULT_AUTHOR_NAME } from '@/constants/constants';
 import { ThreadListResponse } from '@/types/api';
 
 import styles from './page.module.css';
@@ -45,7 +46,7 @@ export default async function Home({ searchParams }: Props) {
                 <>
                   <div className={styles.lastPost}>
                     <span>{thread.posts[0].postNumber?.toString().padStart(4, '0')}</span>{' '}
-                    <span>{thread.posts[0].author ?? process.env.NO_NAME}：</span>
+                    <span>{thread.posts[0].author || DEFAULT_AUTHOR_NAME}：</span>
                     <span>
                       {format(thread.posts[0].createdAt, 'yyyy/MM/dd(E) HH:mm:ss.SS', {
                         locale: ja,
