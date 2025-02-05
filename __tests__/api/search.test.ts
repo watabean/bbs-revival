@@ -25,9 +25,9 @@ describe('GET エンドポイント', () => {
 
     // (1) prisma.post.findMany: 投稿内容に query を含む投稿（最新順＝降順）を返す
     const matchedPosts = [
-      { id: 3, content: 'test something', threadId: 2, deletedAt: null },
-      { id: 2, content: 'another test post', threadId: 1, deletedAt: null },
-      { id: 1, content: 'test post', threadId: 1, deletedAt: null },
+      { id: 3, content: 'test something', threadId: 2 },
+      { id: 2, content: 'another test post', threadId: 1 },
+      { id: 1, content: 'test post', threadId: 1 },
     ];
 
     // (3) prisma.thread.findMany: タイトル or 投稿ヒットしたスレッドを返す（初期状態の posts を含む）
@@ -35,20 +35,17 @@ describe('GET エンドポイント', () => {
       {
         id: 1,
         title: 'test thread',
-        posts: [{ id: 10, content: 'dummy', deletedAt: null }],
-        deletedAt: null,
+        posts: [{ id: 10, content: 'dummy' }],
       },
       {
         id: 2,
         title: 'another thread',
-        posts: [{ id: 20, content: 'dummy', deletedAt: null }],
-        deletedAt: null,
+        posts: [{ id: 20, content: 'dummy' }],
       },
       {
         id: 3,
         title: 'title that contains test',
-        posts: [{ id: 30, content: 'dummy', deletedAt: null }],
-        deletedAt: null,
+        posts: [{ id: 30, content: 'dummy' }],
       },
     ];
 
@@ -71,20 +68,18 @@ describe('GET エンドポイント', () => {
     expect(thread1.posts).toEqual([
       // matchedPosts 内で threadId === 1 の投稿は [ { id:2, ... }, { id:1, ... } ]
       // これを reverse すると昇順になり [ { id:1, ... }, { id:2, ... } ]
-      { id: 1, content: 'test post', threadId: 1, deletedAt: null },
-      { id: 2, content: 'another test post', threadId: 1, deletedAt: null },
+      { id: 1, content: 'test post' },
+      { id: 2, content: 'another test post' },
     ]);
 
     const thread2 = json.find((thread: Thread) => thread.id === 2);
     expect(thread2).toBeDefined();
-    expect(thread2.posts).toEqual([
-      { id: 3, content: 'test something', threadId: 2, deletedAt: null },
-    ]);
+    expect(thread2.posts).toEqual([{ id: 3, content: 'test something' }]);
 
     // thread3 は matchedPosts に含まれていないので、初期状態の posts がそのまま返る
     const thread3 = json.find((thread: Thread) => thread.id === 3);
     expect(thread3).toBeDefined();
-    expect(thread3.posts).toEqual([{ id: 30, content: 'dummy', deletedAt: null }]);
+    expect(thread3.posts).toEqual([{ id: 30, content: 'dummy' }]);
   });
 
   it('Prisma の処理でエラーが発生した場合、500 を返す', async () => {

@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 
 import prisma from '@/lib/prisma';
+import { Thread } from '@/types/api';
 
 const MAX_POST_COUNT = 10;
 
@@ -39,7 +40,7 @@ export async function GET(request: Request) {
     });
 
     // (4) 「投稿マッチでヒットしているスレッド」は、posts を差し替え
-    const response = threads.map((thread) => {
+    const response: Thread[] = threads.map((thread) => {
       if (matchedThreadIds.has(thread.id)) {
         thread.posts = matchedPosts
           .filter((post) => post.threadId === thread.id)
@@ -48,7 +49,19 @@ export async function GET(request: Request) {
           // 昇順に並べ替える
           .reverse();
       }
-      return thread;
+      return {
+        id: thread.id,
+        title: thread.title,
+        createdAt: thread.createdAt,
+        updatedAt: thread.updatedAt,
+        posts: thread.posts.map((post) => ({
+          id: post.id,
+          author: post.author,
+          content: post.content,
+          createdAt: post.createdAt,
+          updatedAt: post.updatedAt,
+        })),
+      };
     });
     return NextResponse.json(response, {
       headers: {

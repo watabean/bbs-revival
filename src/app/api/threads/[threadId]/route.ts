@@ -48,7 +48,20 @@ export async function GET(request: NextRequest, { params }: Props) {
   }));
 
   const response: PostListResponse = {
-    thread: { ...thread, posts: postsWithIndex },
+    thread: {
+      id: thread.id,
+      title: thread.title,
+      createdAt: thread.createdAt,
+      updatedAt: thread.updatedAt,
+      posts: postsWithIndex.map((post) => ({
+        id: post.id,
+        author: post.author,
+        content: post.content,
+        createdAt: post.createdAt,
+        updatedAt: post.updatedAt,
+        postNumber: post.postNumber,
+      })),
+    },
     pagination: {
       currentPage: pageParam,
       totalPages: Math.ceil(totalItems / limitParam),

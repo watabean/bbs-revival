@@ -98,7 +98,7 @@ export async function POST(request: Request) {
     if (title.length > MAX_LENGTH_THREAD_TITLE) {
       return NextResponse.json({ error: 'Title is too long' }, { status: 400 });
     }
-    if (author.length > MAX_LENGTH_AUTHOR) {
+    if (author?.length > MAX_LENGTH_AUTHOR) {
       return NextResponse.json({ error: 'Author name is too long' }, { status: 400 });
     }
     if (content.length > MAX_LENGTH_CONTENT) {
