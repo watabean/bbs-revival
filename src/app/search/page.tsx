@@ -8,8 +8,6 @@ import { Thread } from '@/types/api';
 
 import styles from './page.module.css';
 
-const MAX_POST_COUNT = 100;
-
 type Props = {
   searchParams: Promise<{ query?: string }>;
 };
@@ -57,22 +55,20 @@ export default async function SearchResultPage({ searchParams }: Props) {
           {threads.map((thread: Thread) => (
             <Link key={thread.id} href={thread.id.toString()} className={styles.threadItem}>
               <h2>{highlightMatch(thread.title, query)}</h2>
-              {(thread.filteredPosts?.length ? thread.filteredPosts : thread.posts)
-                .slice(0, MAX_POST_COUNT)
-                .map((post) => (
-                  <div key={post.id}>
-                    <div className={styles.lastPost}>
-                      {/* <span>{post.postNumber?.toString().padStart(4, '0')}</span> */}
-                      <span>{post.author || DEFAULT_AUTHOR_NAME}：</span>
-                      <span>
-                        {format(post.createdAt, 'yyyy/MM/dd(E) HH:mm:ss.SS', {
-                          locale: ja,
-                        })}
-                      </span>
-                    </div>
-                    <p className={styles.lastPost}>{highlightMatch(post.content, query)}</p>
+              {thread.posts.map((post) => (
+                <div key={post.id}>
+                  <div className={styles.lastPost}>
+                    {/* <span>{post.postNumber?.toString().padStart(4, '0')}</span> */}
+                    <span>{post.author || DEFAULT_AUTHOR_NAME}：</span>
+                    <span>
+                      {format(post.createdAt, 'yyyy/MM/dd(E) HH:mm:ss.SS', {
+                        locale: ja,
+                      })}
+                    </span>
                   </div>
-                ))}
+                  <p className={styles.lastPost}>{highlightMatch(post.content, query)}</p>
+                </div>
+              ))}
             </Link>
           ))}
         </div>

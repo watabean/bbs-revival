@@ -9,43 +9,47 @@ export async function GET(request: Request) {
     const { searchParams } = new URL(request.url);
     const query = searchParams.get('query');
 
-    // Step 1: query を含むポストを全件取得
-    const posts = await prisma.post.findMany({
+    // (1) 投稿内容に query を含む投稿を取得
+    const matchedPosts = await prisma.post.findMany({
       where: {
-        content: { contains: query || '' },
+        content: { contains: query ?? '' },
         deletedAt: null,
       },
-      orderBy: { id: 'asc' },
+      orderBy: { id: 'desc' }, // 最新順に並べて取得
     });
 
-    // Step 2: 取得したポストの threadId をリスト化
-    const threadIds = [...new Set(posts.map((post) => post.threadId))]; // 重複を削除
+    // (2) ヒットした投稿のスレッドIDをリスト化
+    const matchedThreadIds = new Set(matchedPosts.map((post) => post.threadId));
 
-    // Step 3: threadId に一致するスレッドを取得
+    // (3) タイトルがヒット or 投稿がヒットしたスレッドを取得
     const threads = await prisma.thread.findMany({
       where: {
         deletedAt: null,
-        OR: [
-          { title: { contains: query || '' } }, // queryをタイトルに含むスレッド
-          { id: { in: threadIds } }, // queryを含むポストが存在するスレッド
-        ],
+        OR: [{ title: { contains: query ?? '' } }, { id: { in: [...matchedThreadIds] } }],
       },
       orderBy: { id: 'desc' },
+      // ひとまず最新1件だけを `thread.posts` で持っておく
       include: {
         posts: {
           where: { deletedAt: null },
           orderBy: { id: 'desc' },
-          take: 1, // 最新の1件のみ取得
+          take: 1,
         },
       },
     });
 
-    // Step 4: スレッドごとに関連するポストを紐づける
-    const response = threads.map((thread) => ({
-      ...thread,
-      filteredPosts: posts.slice(0, MAX_POST_COUNT).filter((post) => post.threadId === thread.id),
-    }));
-
+    // (4) 「投稿マッチでヒットしているスレッド」は、posts を差し替え
+    const response = threads.map((thread) => {
+      if (matchedThreadIds.has(thread.id)) {
+        thread.posts = matchedPosts
+          .filter((post) => post.threadId === thread.id)
+          // 最新順に最大件数でフィルタ
+          .slice(0, MAX_POST_COUNT)
+          // 昇順に並べ替える
+          .reverse();
+      }
+      return thread;
+    });
     return NextResponse.json(response, {
       headers: {
         'Content-Type': 'application/json',
